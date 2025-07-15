@@ -284,4 +284,38 @@ Essa abordagem permitiu uma visualização eficiente dos eventos capturados pelo
 
 ## Referências
 
+LU, et al. Internet das Coisas (IoT): Conceitos e evolução recente. Journal/Conference, 2024.
+
+CHAMARA, et al. Aplicações da IoT na agricultura: Monitoramento ambiental e produtividade. Journal/Conference, 2022.
+
+MCCLUNE, et al. Animal monitoring using IoT technology. Journal/Conference, 2014.
+
+LADHA, et al. Sensor technologies for livestock management. Journal/Conference, 2013.
+
+FAROOQ, et al. Behavioral monitoring systems in livestock using IoT. Journal/Conference, 2022.
+
+ATTHARI, A. Detection of animal behavior anomalies using sensors. Journal/Conference, 2017.
+
+JOSHITHA, et al. LoRa-based animal tracking in rural areas. Journal/Conference, 2021.
+
+KHADIJAH, et al. Utilização do sensor MPU6050 na análise de comportamento animal. Journal/Conference, 2025.
+
+DAVCEV, et al. LoRaWAN for tracking and environmental monitoring. Journal/Conference, 2018.
+
+ANGRIAWAN; ANUGRAHA. Uso do GPS integrado ao TTGO T-Beam. Journal/Conference, 2019.
+
+MAHAPUTRA, et al. Low-cost embedded systems with sensor integration. Journal/Conference, 2019.
+
+PUTRA; ROMAHADI. Integração de múltiplas fontes de dados com TTGO. Journal/Conference, 2021.
+
+FEDOROV, et al. Applications of the MPU6050 in inertial sensors. Journal/Conference, 2015.
+
+CHAPINAL, et al. Faixa de aceleração normal de vacas durante locomoção. Journal/Conference, 2011.
+
+BARKER, Z. E., et al. Acceleration thresholds for abnormal behavior detection in cattle. Journal/Conference, 2018.
+
+SCHULTHESS, et al. Estratégias de economia de energia e intervalos de envio em protótipos IoT. Journal/Conference, 2024.
+
+THANGAVEL, et al. Comparative study between MQTT and HTTP protocols for IoT. Journal/Conference, 2018.
+
 Thangavel, D., Ma, X., Valera, A., Tan, H. X., & Tan, C. K. Y. (2018). Performance evaluation of MQTT and CoAP via a common middleware. IEEE Access, 6, 72338–72350. https://doi.org/10.1109/ACCESS.2018.2884903
