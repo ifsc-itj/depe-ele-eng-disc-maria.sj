@@ -284,4 +284,4 @@ Essa abordagem permitiu uma visualização eficiente dos eventos capturados pelo
 
 ## Referências
 
-[Inserir todas as referências utilizadas. Sugere-se o uso do site referenciabibliografica.net para a geração das referências. Veja o exemplo abaixo.]
+Thangavel, D., Ma, X., Valera, A., Tan, H. X., & Tan, C. K. Y. (2018). Performance evaluation of MQTT and CoAP via a common middleware. IEEE Access, 6, 72338–72350. https://doi.org/10.1109/ACCESS.2018.2884903
