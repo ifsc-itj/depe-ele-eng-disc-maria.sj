@@ -268,6 +268,29 @@ A arquitetura do backend foi composta por três elementos principais: Broker MQT
 
 Essa abordagem permitiu uma visualização eficiente dos eventos capturados pelo dispositivo, como movimentos anômalos e localização GPS, com mínimo atraso, sem a necessidade de chamadas HTTP periódicas (polling), que aumentariam o tráfego de rede e o consumo de energia.
 
+### Tabela – Especificações do TTGO T-Beam v1.1 ESP32
+
+| **Modelo**                    | **TTGO T-Beam v1.1 ESP32**                                 |
+|------------------------------|-------------------------------------------------------------|
+| **Bandas ISM (MHz)**         | IN865–867                                                   |
+| **Semtech**                  | SX1276                                                      |
+| **Potência de transmissão**  | 20 dBM                                                      |
+| **Fator de espalhamento (SF)** | 7, 12                                                     |
+| **Largura de banda (kHz)**   | 125 kHz, 250 kHz                                            |
+| **Consumo de energia**       | **Modo ativo** (transmissão GPS & LoRa): 100–150 mA  <br> **Modo inativo**: 10–15 mA  <br> **Modo de sono profundo**: 1–2 mA |
+| **Peso**                     | 52 g                                                       |
+
+
+### Tabela – Especificações do *The Things Indoor Gateway*
+
+| **Modelo**                 | **The Things Indoor Gateway**     |
+|---------------------------|-----------------------------------|
+| **Frequência**            | AU915                             |
+| **Potência de transmissão (TX)** | 20 dBm                  |
+| **Chipset**               | SX1308                            |
+| **Dimensões**             | 90 × 80 × 40 mm                   |
+| **Versão da especificação LoRaWAN** | V.1.0.3              |
+
 ## Resultados
 
 [Incluir e comentar sobre: Diagrama final do protótipo, descrição dos testes realizados, apresentação e análise dos resultados dos testes realizados, fotos, diagramas, tabelas comparativas.]
