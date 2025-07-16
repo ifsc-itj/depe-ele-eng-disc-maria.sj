@@ -1,5 +1,16 @@
 # Título do Trabalho
 
+**Keywords**: Livestock Monitoring, IoT, Sensors, LoRaWAN.
+
+<details>
+<summary><strong>Abstract</strong></summary>
+
+<br>
+
+Livestock monitoring is critical for ensuring animal welfare, improving productivity, and reducing losses in rural farming. This work presents the development of a low-cost, energy-efficient IoT-based system for real-time tracking and behavior analysis of cattle in extensive pasture environments in Brazil. The proposed solution integrates the TTGO T-Beam v1.2 microcontroller, equipped with GPS and the MPU6050 inertial sensor, to collect geolocation and movement data. Communication is handled via LoRaWAN using The Things Network (TTN), ensuring long-range and low-power data transmission. A conditional uplink mechanism transmits sensor data only when anomalous movement is detected, optimizing power consumption. The backend architecture uses MQTT and Node-RED for data processing and visualization in a web dashboard. Preliminary tests confirm stable sensor integration and efficient detection of unusual activity, validating the system’s potential for smart livestock management. The proposed system is scalable, cost-effective, and suitable for deployment in remote areas, supporting the advancement of precision livestock farming in Brazil.
+
+</details>
+
 ## Introdução
 
 A Internet das Coisas (IoT) é uma tecnologia  revolucionária que conecta inúmeros dispositivos por meio de redes de internet, permitindo a coleta e a troca de dados em tempo real (Lu et al., 2024). Esses “dispositivos” são, essencialmente, sensores e atuadores equipados com interface de rede sem fio, unidades de processamento e armazenamento. Essa tecnologia tem transformado diversos setores, especialmente o agronegócio, ao impulsionar inovações para melhorar a produtividade, a eficiência no uso de recursos e a sustentabilidade.
@@ -28,11 +39,11 @@ Nesse contexto, o protocolo LoRaWAN (Long Range Wide Area Network) tem se destac
 
 Além disso, o LoRa utiliza modulação CSS (chirp spread spectrum) e opera na faixa ISM sub-GHz, oferecendo boa penetração de sinal e resistência a interferências — características ideais para áreas com vegetação densa ou relevo acidentado, comuns no interior brasileiro.
 
-O principal dispositivo de monitoramento de gado utilizado nesta pesquisa foi o TTGO T-Beam, um microcontrolador que integra LoRa, GPS, Wi-Fi e o sensor MPU6050, tornando-o ideal para regiões remotas com conectividade limitada e desafios energéticos. O módulo GPS permite o rastreamento preciso da localização, essencial para a segurança dos animais e redução de riscos durante o pasto livre. O Wi-Fi possibilita o envio de dados para plataformas em nuvem, facilitando o acesso remoto às informações em tempo real. Já o sensor MPU6050, que mede aceleração e velocidade angular, fornece dados detalhados sobre movimentos e orientação dos animais, possibilitando a identificação de comportamentos anormais que possam indicar sofrimento, doenças ou lesões (Khadijah et et al., 2025).
+O principal dispositivo de monitoramento de gado utilizado nesta pesquisa foi o TTGO T-Beam, um microcontrolador que integra LoRa, GPS, Wi-Fi e o sensor MPU6050, tornando-o ideal para regiões remotas com conectividade limitada e desafios energéticos. O módulo GPS permite o rastreamento preciso da localização, essencial para a segurança dos animais e redução de riscos durante o pasto livre. O Wi-Fi possibilita o envio de dados para plataformas em nuvem, facilitando o acesso remoto às informações em tempo real. Já o sensor MPU6050, que mede aceleração e velocidade angular, fornece dados detalhados sobre movimentos e orientação dos animais, possibilitando a identificação de comportamentos anormais que possam indicar sofrimento, doenças ou lesões (Khadijah et et al., 2025). As principais especificações do hardware utilizado estão listadas na Tabela 1.
 
 ### Tabela 1 – Especificações técnicas do microcontrolador TTGO T-Beam v1.2 ESP32
 
-| **Modelo**                    | **TTGO T-Beam v1.1 ESP32**                                 |
+| **Modelo**                    | **TTGO T-Beam v1.2 ESP32**                                 |
 |------------------------------|-------------------------------------------------------------|
 | **Bandas ISM (MHz)**         | IN865–867                                                   |
 | **Semtech**                  | SX1276                                                      |
@@ -65,6 +76,22 @@ A lógica do sistema foi implementada para enviar as coordenadas GPS a cada 30 s
 Comparando-se com estudos anteriores, nota-se que a maioria dos protótipos em aplicações similares utiliza intervalos de transmissão maiores (ex: 10–15 minutos), focando na economia de energia e na durabilidade das baterias, como em Schulthess et al. (2024). Em contrapartida, este projeto priorizou a alta frequência de dados e a reatividade a eventos, embora ainda não tenha sido realizada uma análise da duração da bateria. Além disso, poucos trabalhos integram todos esses elementos em um único sistema: rastreabilidade, detecção de movimento anômalo e visualização em tempo real, de forma acessível e adaptável ao contexto brasileiro.
 
 Portanto, a proposta desenvolvida pelo presente trabalho se diferencia ao combinar hardware de baixo custo, sensores estratégicos, comunicação LoRaWAN, processamento local e visualização remota, oferecendo uma solução escalável e aplicável à realidade de produtores rurais no Brasil. Ao alinhar os aprendizados da literatura internacional com a experimentação prática em território nacional, o projeto avança no desenvolvimento de ferramentas digitais acessíveis para o agronegócio.
+
+## Objetivo Geral
+Desenvolver e validar um sistema de monitoramento de bovinos baseado em Internet das Coisas (IoT), utilizando comunicação LoRaWAN e sensores embarcados para rastreamento por GPS e detecção de comportamentos anômalos, com foco na aplicabilidade em ambientes rurais brasileiros de baixa infraestrutura tecnológica.
+
+### Objetivos Específicos
+* Projetar um protótipo de dispositivo IoT utilizando o microcontrolador TTGO T-Beam com sensores GPS e MPU6050 integrados;
+
+* Implementar a comunicação de longo alcance com baixo consumo energético por meio do protocolo LoRaWAN, utilizando a infraestrutura do The Things Network (TTN);
+
+* Configurar o envio condicional de dados, baseado na detecção de aceleração acima de limiares predefinidos, visando identificar comportamentos atípicos dos animais;
+
+* Realizar testes de bancada para validação do funcionamento simultâneo dos sensores e da comunicação com a rede LoRaWAN;
+
+* Integrar os dados recebidos a uma plataforma de visualização em tempo real via protocolo MQTT e dashboard desenvolvido no Node-RED;
+
+* Avaliar o desempenho do sistema em relação à responsividade, precisão dos dados e viabilidade de aplicação prática no contexto da pecuária de precisão.
 
 ## **Materiais e Métodos**
 
@@ -270,10 +297,9 @@ A escolha do protocolo de comunicação é um dos elementos críticos em projeto
 
 Segundo estudo de Thangavel et al. (2018), o MQTT se destaca por utilizar um modelo de publicação e assinatura (publish/subscribe) baseado em conexões TCP persistentes, o que proporciona menor consumo de banda, baixa latência e eficiência energética significativamente superior ao modelo request/response do HTTP. O artigo também ressalta que o MQTT permite a configuração de níveis de Qualidade de Serviço (QoS), essenciais para garantir a entrega confiável das mensagens, um aspecto importante em aplicações que monitoram comportamentos críticos de animais.
 
-Além disso, o cabeçalho compacto do MQTT e seu baixo overhead tornam o protocolo ideal para dispositivos com recursos limitados, como os empregados neste estudo, baseados no microcontrolador TTGO T-Beam com sensores embarcados. A integração com o The Things Network (TTN) foi realizada via TTN MQTT bridge, o que exigiu a geração de uma chave de autenticação (API Key) diretamente no console da plataforma e sua posterior configuração no fluxo de dados do Node-RED, ferramenta responsável pela visualização dos dados em tempo real em um dashboard interativo. A Tabela 3 mostra os parâmetros de configuração recebidos pela TTN, e que foram ecaminhados utilizando credenciais  fornecidas pelo TTN MQTT Bridge.
- 
+Além disso, o cabeçalho compacto do MQTT e seu baixo overhead tornam o protocolo ideal para dispositivos com recursos limitados, como os empregados neste estudo, baseados no microcontrolador TTGO T-Beam com sensores embarcados. A integração com o The Things Network (TTN) foi realizada via TTN MQTT bridge, o que exigiu a geração de uma chave de autenticação (API Key) diretamente no console da plataforma e sua posterior configuração no fluxo de dados do Node-RED, ferramenta responsável pela visualização dos dados em tempo real em um dashboard interativo. A Tabela 3 mostra os parâmetros utilizados para a configuração do protocolo MQTT no backend TTN. 
 
-### Tabela 3 – Especificações do TTGO T-Beam v1.1 ESP32 
+### Tabela 2 – Especificações do TTGO T-Beam v1.1 ESP32 
   
 | Parâmetro       | Valor                                                       |
 | --------------- | ----------------------------------------------------------- |
@@ -283,7 +309,7 @@ Além disso, o cabeçalho compacto do MQTT e seu baixo overhead tornam o protoco
 | **Password**    | A **chave gerada** dessa API key                            |
 | **Tópico MQTT** | `v3/gps-agro@ttn/devices/+/up`                              |
 
-
+O uso da porta 8883 com TLS garante segurança na transmissão dos dados sensíveis. Além disso, o uso do tópico genérico com coringa + facilita a subscrição de múltiplos dispositivos no mesmo dashboard
 A adoção do MQTT, portanto, alinha-se às melhores práticas para comunicação em sistemas IoT distribuídos, conforme demonstrado pela literatura, assegurando um balanceamento adequado entre confiabilidade, leveza e escalabilidade da solução proposta.
 
 A arquitetura do backend foi composta por três elementos principais: Broker MQTT (TTN MQTT Bridge) responsável por receber os pacotes uplink transmitidos pela rede LoRaWAN e disponibilizá-los para assinantes MQTT; Node-RED, um ambiente de programação visual usado para processar os dados em tempo real, convertê-los para formatos legíveis e alimentar os dashboards interativos; Dashboard Web construída no próprio Node-RED, utilizando widgets de gráfico e mapa interativo (worldmap) para exibir a trajetória dos animais e os dados de aceleração.
