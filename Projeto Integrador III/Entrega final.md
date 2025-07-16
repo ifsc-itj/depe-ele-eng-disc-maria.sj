@@ -1,13 +1,13 @@
 # Título do Trabalho
 
-**Keywords**: Livestock Monitoring, IoT, Sensors, LoRaWAN.
-
 <details>
 <summary><strong>Abstract</strong></summary>
 
 <br>
 
 Livestock monitoring is critical for ensuring animal welfare, improving productivity, and reducing losses in rural farming. This work presents the development of a low-cost, energy-efficient IoT-based system for real-time tracking and behavior analysis of cattle in extensive pasture environments in Brazil. The proposed solution integrates the TTGO T-Beam v1.2 microcontroller, equipped with GPS and the MPU6050 inertial sensor, to collect geolocation and movement data. Communication is handled via LoRaWAN using The Things Network (TTN), ensuring long-range and low-power data transmission. A conditional uplink mechanism transmits sensor data only when anomalous movement is detected, optimizing power consumption. The backend architecture uses MQTT and Node-RED for data processing and visualization in a web dashboard. Preliminary tests confirm stable sensor integration and efficient detection of unusual activity, validating the system’s potential for smart livestock management. The proposed system is scalable, cost-effective, and suitable for deployment in remote areas, supporting the advancement of precision livestock farming in Brazil.
+
+**Keywords**: Livestock Monitoring, IoT, Sensors, LoRaWAN.
 
 </details>
 
@@ -317,21 +317,46 @@ A arquitetura do backend foi composta por três elementos principais: Broker MQT
 Essa abordagem permitiu uma visualização eficiente dos eventos capturados pelo dispositivo, como movimentos anômalos e localização GPS, com mínimo atraso, sem a necessidade de chamadas HTTP periódicas (polling), que aumentariam o tráfego de rede e o consumo de energia.
 
 
-
-
 ## Resultados
 
-[Incluir e comentar sobre: Diagrama final do protótipo, descrição dos testes realizados, apresentação e análise dos resultados dos testes realizados, fotos, diagramas, tabelas comparativas.]
+Este trabalho utiliza dados temporais de um módulo GPS e do sensor MPU6050 para rastrear localização e movimento. Após a implementação completa do protótipo, foram realizados testes de envio e recepção de dados por meio da infraestrutura da The Things Network (TTN), utilizando comunicação LoRaWAN. O foco principal desta etapa foi verificar a integridade dos dados transmitidos, a resposta do sistema a eventos de movimento anômalo e a correta visualização no dashboard construído via Node-RED.
+
+Durante os testes, os pacotes uplink foram transmitidos para a TTN sempre que o acelerômetro detectava uma movimentação superior a 2.1 g e os dados do GPS estavam válidos. O payload enviado incluía latitude, longitude e aceleração total em um formato compacto de 9 bytes. No entanto, observou-se que, apesar da transmissão ser concluída, os dados não eram exibidos corretamente na aba Live Data do TTN Console. A decodificação automática dos pacotes ainda não foi implementada, o que resultou em informações de localização exibidas incorretamente na visualização direta do TTN.
+
+Apesar disso, ao inspecionar manualmente o conteúdo dos pacotes, foi possível verificar que os valores brutos de latitude e longitude estavam presentes e coerentes, o que indicava que o envio de dados via LoRaWAN estava funcionando. Esses dados foram redirecionados com sucesso para o Node-RED via MQTT, onde foi possível decodificá-los corretamente. Com isso, foi possível construir um dashboard funcional, exibindo a localização dos animais no mapa (worldmap) e os eventos de movimentação com base nos dados do sensor MPU6050.
+
+Os dados de localização GPS foram visualizados corretamente no mapa interativo (worldmap). Já os dados de aceleração (MPU6050), embora coletados e transmitidos, não estão sendo corretamente interpretados no TTN e, portanto, ainda não aparecem no dashboard como valores legíveis. A imagem a seguir apresenta o dashboard desenvolvido com Node-RED, incluindo o mapa com os pontos de localização enviados pelo GPS:
+
+<p align="center"> <em>Figura X: Dashboard do Node-RED com visualização do Worldmap (posição do animal)</em> </p>
+
+Já a figura seguinte mostra o painel de aceleração, que, embora esteja funcional em termos de design e lógica, ainda não recebe dados válidos por conta de problemas na decodificação ou parsing dos dados MQTT vindos do TTN:
+
+<p align="center"> <em>Figura Y: Dashboard do Node-RED para visualização de aceleração (dados não recebidos corretamente)</em> </p>
+
+Apesar dessas limitações, os testes confirmam que o sistema é capaz de identificar movimentos fora do padrão e associá-los a coordenadas geográficas, cumprindo seu objetivo principal. O uso de MQTT mostrou-se eficiente para transportar os dados entre o TTN e o Node-RED com baixa latência.
+
 
 ## Conclusão
 
+Em suma, foi desenvolvido um sistema baseado em IoT utilizando a placa TTGO T-Beam com suporte a GPS, acelerômetro (MPU6050) e conectividade LoRaWAN, com o objetivo de monitorar em tempo real a movimentação e localização de animais em áreas rurais. Diferentemente de abordagens que priorizam a economia de energia com intervalos longos de envio de dados, este sistema priorizou a alta frequência de amostragem, enviando informações a cada 30 segundos ou imediatamente após detecção de movimentos anômalos.
+
+Os dados capturados pelos sensores foram processados e transmitidos para a rede The Things Network (TTN) via protocolo LoRaWAN utilizando o método OTAA. Embora os pacotes tenham sido transmitidos corretamente, a decodificação automática no console da TTN ainda não foi implementada, sendo necessária a interpretação manual dos payloads no Node-RED. Ainda assim, foi possível montar um dashboard funcional que exibe com precisão os dados de localização em um mapa e os eventos de movimentação com base no acelerômetro. O sistema mostrou-se eficaz na captação de dados relevantes para rastreamento de animais em tempo real, podendo contribuir para o controle de posicionamento e segurança do rebanho. 
+
 ### Dificuldades encontradas
 
-[Apresente as dificuldades encontradas durante ao longo do desenvolvimento do seu trabalho.]
+Compreensão da biblioteca lmic node. decodificar payloads recebidas no ttn envio de dados corretos do mpu para o node red
 
 ### Sugestões para trabalhos futuros
 
-[Apresente suas sugestões de trabalhos futuros.]
+Como trabalhos futuros, podem ser considerados a implementação de decodificadores diretos no TTN, a compactação mais eficiente dos dados enviados, e a integração com outros sensores (como de temperatura ou batimentos cardíacos) para ampliar o escopo de monitoramento da saúde animal.
+
+Os próximos passos incluem:
+
+* Implementar um decodificador no TTN para transformar os dados binários em JSON já na origem.
+
+* Ajustar o fluxo do Node-RED para interpretar corretamente os dados do acelerômetro.
+
+* Testar com dispositivos múltiplos simultaneamente.
 
 ## Referências
 
