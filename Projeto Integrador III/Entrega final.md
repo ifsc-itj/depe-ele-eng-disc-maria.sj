@@ -325,13 +325,41 @@ Durante os testes, os pacotes uplink foram transmitidos para a TTN sempre que o 
 
 Apesar disso, ao inspecionar manualmente o conteúdo dos pacotes, foi possível verificar que os valores brutos de latitude e longitude estavam presentes e coerentes, o que indicava que o envio de dados via LoRaWAN estava funcionando. Esses dados foram redirecionados com sucesso para o Node-RED via MQTT, onde foi possível decodificá-los corretamente. Com isso, foi possível construir um dashboard funcional, exibindo a localização dos animais no mapa (worldmap) e os eventos de movimentação com base nos dados do sensor MPU6050.
 
+<img width="1896" height="582" alt="image" src="https://github.com/user-attachments/assets/3c84559c-17fa-4f3d-8d4a-800e71e2138f" />
+
+
 Os dados de localização GPS foram visualizados corretamente no mapa interativo (worldmap). Já os dados de aceleração (MPU6050), embora coletados e transmitidos, não estão sendo corretamente interpretados no TTN e, portanto, ainda não aparecem no dashboard como valores legíveis. A imagem a seguir apresenta o dashboard desenvolvido com Node-RED, incluindo o mapa com os pontos de localização enviados pelo GPS:
 
-<p align="center"> <em>Figura X: Dashboard do Node-RED com visualização do Worldmap (posição do animal)</em> </p>
+<p align="center"> 
+Figura 3: Dashboard do Node-RED com visualização da aceleração atual do animal</br> 
+<img width="1287" height="394" alt="image" src="https://github.com/user-attachments/assets/28ed163f-786d-477c-bb11-163778a30ea9" />
+
+</p> 
+
+<img width="1910" height="719" alt="image" src="https://github.com/user-attachments/assets/014dec8f-0057-451e-ad29-7e074d87d3f1" />
+
+
+<img width="1907" height="916" alt="image" src="https://github.com/user-attachments/assets/dfdfa7eb-1ea5-4367-95b5-e4436b60a470" />
+
+<img width="258" height="380" alt="image" src="https://github.com/user-attachments/assets/d12d91f7-f566-4be0-8f66-7b4544dc00aa" />
+
+<img width="738" height="713" alt="image" src="https://github.com/user-attachments/assets/d31812f4-202c-47a1-99aa-20f3096d5325" />
+
+
+<img width="1910" height="847" alt="image" src="https://github.com/user-attachments/assets/2c5a2a53-e51f-424a-a16a-e513370f533c" />
+
+<p align="center"> 
+Figura 4:  Dashboard do Node-RED com visualização do worldmap (posição do animal</em> 
+<img width="1911" height="916" alt="image" src="https://github.com/user-attachments/assets/5d1b892a-eb51-49bb-9c3b-9fcd0a7bee05" />
+</p>
+
 
 Já a figura seguinte mostra o painel de aceleração, que, embora esteja funcional em termos de design e lógica, ainda não recebe dados válidos por conta de problemas na decodificação ou parsing dos dados MQTT vindos do TTN:
 
-<p align="center"> <em>Figura Y: Dashboard do Node-RED para visualização de aceleração (dados não recebidos corretamente)</em> </p>
+<p align="center"> 
+Figura 3: Dashboard do Node-RED para visualização de aceleração (dados não recebidos corretamente) </br> 
+<img width="1916" height="560" alt="image" src="https://github.com/user-attachments/assets/277af276-f9c8-46de-90ed-4c0431b46cad" />
+</p> 
 
 Apesar dessas limitações, os testes confirmam que o sistema é capaz de identificar movimentos fora do padrão e associá-los a coordenadas geográficas, cumprindo seu objetivo principal. O uso de MQTT mostrou-se eficiente para transportar os dados entre o TTN e o Node-RED com baixa latência.
 
