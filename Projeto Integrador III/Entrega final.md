@@ -353,15 +353,10 @@ Fonte: Autor </br>
 Figura 8: Dashboard do Node-RED para visualização da posição do gado </br>
 <img width="1907" height="916" alt="image" src="https://github.com/user-attachments/assets/dfdfa7eb-1ea5-4367-95b5-e4436b60a470" /> </br>
 Fonte: Autor </br>
-Figura 4:  Dashboard do Node-RED com visualização do worldmap (posição do animal) </br>
+Figura 4:  Página do Worldmap para visualização do rastreamento </br>
 <img width="1911" height="916" alt="image" src="https://github.com/user-attachments/assets/5d1b892a-eb51-49bb-9c3b-9fcd0a7bee05" /> </br>
 Fonte: Autor
 </p>
-<p align="center"> 
-Figura 3: Página do Worldmap para visualização do rastreamento </br> 
-<img width="1916" height="560" alt="image" src="https://github.com/user-attachments/assets/277af276-f9c8-46de-90ed-4c0431b46cad" /> </br>
-Fonte: Autor
-</p> 
 
 Apesar dessas limitações, os testes confirmam que o sistema é capaz de identificar movimentos fora do padrão e associá-los a coordenadas geográficas, cumprindo seu objetivo principal. O uso de MQTT mostrou-se eficiente para transportar os dados entre o TTN e o Node-RED com baixa latência.
 
