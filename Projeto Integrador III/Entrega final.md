@@ -30,7 +30,7 @@ Os parâmetros de atividade coletados de cada dispositivo ativo são armazenados
 <p align="center">
 Figura 1: Representação geral de um sistema com vários rastreadores de gado
 <img width="759" height="409" alt="image" src="https://github.com/user-attachments/assets/3767840f-8618-41e3-9857-0280808975ee" /> <br>
-Autor: Khadijah et al., 2019
+Fonte: Khadijah et al., 2019
 </p>
 
 Para uma implantação bem-sucedida dessas redes, ainda há desafios técnicos significativos a serem superados: condições ambientais adversas, alcance de comunicação, qualidade de serviço (QoS), custo de implementação e consumo energético (vida útil da bateria).
@@ -162,12 +162,12 @@ O MPU6050 foi o sensor escolhido para o presente trabalho. Trata-se de uma Unida
 
 A comunicação com o módulo GPS foi realizada via UART1, utilizando os pinos 34 (RX) e 12 (TX). Já o acelerômetro MPU6050 foi conectado ao barramento I2C padrão (pinos 21 - SDA e 22 - SCL). O código utilizado baseou-se novamente na bibliotecas TinyGPS++ com adição da MPU6050, que oferecem alto nível de abstração para facilitar a leitura de dados dos respectivos sensores. Além disso, ele foi estruturado para ler continuamente os dados do GPS, verificando a disponibilidade de novas leituras, obter os valores brutos de aceleração do MPU6050 e converter os valores brutos em g (gravidade). 
 <p align="center">
-Figura 2: Protótipo do Hardware IoT.
+Figura 2: Protótipo do Hardware IoT. <br>
 <img width="696" height="552" alt="image" src="https://github.com/user-attachments/assets/4624dd4a-6baf-42da-a6d3-710d82916f03" />  <br>
-Autor: Khadijah et al., 2019 <br>
+Fonte: Khadijah et al., 2019 <br>
 Figura 3: Foto ilustrativa de como será utilizado o colar no gado. 
 <img width="804" height="583" alt="image" src="https://github.com/user-attachments/assets/98c6baed-087b-46c2-9cc1-d22798e6153e" />  <br>
-Autor: Barker et al., 2018
+Fonte: Barker et al., 2018
 </p>
 
 Para a identificação de comportamentos anômalos em bovinos, é fundamental compreender os padrões normais de aceleração durante as atividades rotineiras dos animais. Estudos indicam que, durante a locomoção em piso rígido, como concreto, as pernas das vacas apresentam uma aceleração média na faixa de 1,62 a 1,72 g, enquanto em pisos mais macios, esse valor tende a ser levemente inferior. Essas faixas representam padrões típicos de caminhada e movimentação tranquila (Chapinal et al., 2011). O acelerômetros, nesse caso, pode ser utilizados para detectar desvios desses valores, que podem indicar comportamentos fora do normal, como mancar, agitação, brigas, fugas ou até mesmo tentativas de levantar-se de maneira brusca . 
@@ -319,46 +319,48 @@ Essa abordagem permitiu uma visualização eficiente dos eventos capturados pelo
 
 ## Resultados
 
-Este trabalho utiliza dados temporais de um módulo GPS e do sensor MPU6050 para rastrear localização e movimento. Após a implementação completa do protótipo, foram realizados testes de envio e recepção de dados por meio da infraestrutura da The Things Network (TTN), utilizando comunicação LoRaWAN. O foco principal desta etapa foi verificar a integridade dos dados transmitidos, a resposta do sistema a eventos de movimento anômalo e a correta visualização no dashboard construído via Node-RED.
+Este trabalho utiliza dados temporais de um módulo GPS e do sensor MPU6050 para rastrear localização e movimento. Após a implementação completa do protótipo, foram realizados testes de envio e recepção de dados por meio da infraestrutura da The Things Network (TTN), utilizando comunicação LoRaWAN. O foco principal desta etapa foi verificar a integridade dos dados transmitidos, a resposta do sistema a eventos de movimento anômalo e a correta visualização no dashboard construído via Node-RED. 
+
+A imagem 4 mostra a interface do TTN onde são exibidos os dados recebidos em tempo real dos dispositivos conectados. Aqui é possível visualizar o payload (dados enviados pelo sensor), junto com os metadados da transmissão, como a intensidade do sinal (RSSI), relação sinal-ruído (SNR), frequência utilizada, e o timestamp da mensagem. Essa visão é útil para monitorar se os dispositivos estão enviando dados corretamente e para uma análise rápida dos valores recebidos. Já na imagem 5, são apresentados os detalhes específicos de um evento ocorrido na rede, como o recebimento de um pacote, o envio de uma mensagem para o dispositivo (downlink), ou mesmo erros de comunicação. A seção detalha informações técnicas importantes, que ajudam a diagnosticar o status da conexão, a qualidade da transmissão e identificar possíveis problemas com os dispositivos ou gateways.
+
+<p align="center"> 
+Figura 4: Registro dos dados recebidos em tempo real no Live Data do TTN (The Things Network) </br> 
+<img width="1910" height="719" alt="image" src="https://github.com/user-attachments/assets/014dec8f-0057-451e-ad29-7e074d87d3f1" /> </br> 
+Fonte: Autor </br> 
+Figura 5: Informações específicas relacionadas ao funcionamento da rede </br> 
+<img width="738" height="713" alt="image" src="https://github.com/user-attachments/assets/d31812f4-202c-47a1-99aa-20f3096d5325" /> </br> 
+Fonte: Autor
+</p>
 
 Durante os testes, os pacotes uplink foram transmitidos para a TTN sempre que o acelerômetro detectava uma movimentação superior a 2.1 g e os dados do GPS estavam válidos. O payload enviado incluía latitude, longitude e aceleração total em um formato compacto de 9 bytes. No entanto, observou-se que, apesar da transmissão ser concluída, os dados não eram exibidos corretamente na aba Live Data do TTN Console. A decodificação automática dos pacotes ainda não foi implementada, o que resultou em informações de localização exibidas incorretamente na visualização direta do TTN.
 
-Apesar disso, ao inspecionar manualmente o conteúdo dos pacotes, foi possível verificar que os valores brutos de latitude e longitude estavam presentes e coerentes, o que indicava que o envio de dados via LoRaWAN estava funcionando. Esses dados foram redirecionados com sucesso para o Node-RED via MQTT, onde foi possível decodificá-los corretamente. Com isso, foi possível construir um dashboard funcional, exibindo a localização dos animais no mapa (worldmap) e os eventos de movimentação com base nos dados do sensor MPU6050.
-
-<img width="1896" height="582" alt="image" src="https://github.com/user-attachments/assets/3c84559c-17fa-4f3d-8d4a-800e71e2138f" />
-
-
-Os dados de localização GPS foram visualizados corretamente no mapa interativo (worldmap). Já os dados de aceleração (MPU6050), embora coletados e transmitidos, não estão sendo corretamente interpretados no TTN e, portanto, ainda não aparecem no dashboard como valores legíveis. A imagem a seguir apresenta o dashboard desenvolvido com Node-RED, incluindo o mapa com os pontos de localização enviados pelo GPS:
+Apesar disso, ao inspecionar manualmente o conteúdo dos pacotes, na aba "Event Details", foi possível verificar que os valores brutos de latitude e longitude estavam presentes e coerentes, o que indicava que o envio de dados via LoRaWAN estava funcionando. Esses dados foram redirecionados com sucesso para o Node-RED via MQTT, onde foi possível decodificá-los corretamente. Com isso, foi possível construir um dashboard funcional, exibindo a localização dos animais no mapa (worldmap) e os eventos de movimentação com base nos dados do sensor MPU6050. A seguir, a figura 6 apresenta o ambiente de desenvolvimento e da interface gráfica desenvolvida no Node-RED, utilizadas no projeto de monitoramento de gado.
 
 <p align="center"> 
-Figura 3: Dashboard do Node-RED com visualização da aceleração atual do animal</br> 
+Figura 6: Fluxogramado Sistema no Node-RED </br> 
 <img width="1287" height="394" alt="image" src="https://github.com/user-attachments/assets/28ed163f-786d-477c-bb11-163778a30ea9" />
-
 </p> 
 
-<img width="1910" height="719" alt="image" src="https://github.com/user-attachments/assets/014dec8f-0057-451e-ad29-7e074d87d3f1" />
-
-
-<img width="1907" height="916" alt="image" src="https://github.com/user-attachments/assets/dfdfa7eb-1ea5-4367-95b5-e4436b60a470" />
-
-<img width="258" height="380" alt="image" src="https://github.com/user-attachments/assets/d12d91f7-f566-4be0-8f66-7b4544dc00aa" />
-
-<img width="738" height="713" alt="image" src="https://github.com/user-attachments/assets/d31812f4-202c-47a1-99aa-20f3096d5325" />
-
-
-<img width="1910" height="847" alt="image" src="https://github.com/user-attachments/assets/2c5a2a53-e51f-424a-a16a-e513370f533c" />
+Os dados de localização GPS foram visualizados corretamente no mapa interativo (worldmap) e na dashboard, mais especificamente na aba "Mapa" mostrada na figura 7. Já os dados de aceleração (MPU6050), embora coletados e transmitidos, não estão sendo corretamente interpretados no TTN e, portanto, ainda não aparecem no dashboard como valores legíveis. As imagens a seguir apresentam o dashboard completo desenvolvido com Node-RED.
 
 <p align="center"> 
-Figura 4:  Dashboard do Node-RED com visualização do worldmap (posição do animal</em> 
-<img width="1911" height="916" alt="image" src="https://github.com/user-attachments/assets/5d1b892a-eb51-49bb-9c3b-9fcd0a7bee05" />
+Figura 6: Interface UI com Subpáginas de Aceleração e Localização </br>
+<img width="258" height="380" alt="image" src="https://github.com/user-attachments/assets/d12d91f7-f566-4be0-8f66-7b4544dc00aa" /> </br>
+Fonte: Autor </br>
+Figura 7: Dashboard do Node-RED para visualização de aceleração (dados não recebidos corretamente) </br> 
+<img width="1916" height="560" alt="image" src="https://github.com/user-attachments/assets/277af276-f9c8-46de-90ed-4c0431b46cad" /> </br>
+Fonte: Autor </br>
+Figura 8: Dashboard do Node-RED para visualização da posição do gado </br>
+<img width="1907" height="916" alt="image" src="https://github.com/user-attachments/assets/dfdfa7eb-1ea5-4367-95b5-e4436b60a470" /> </br>
+Fonte: Autor </br>
+Figura 4:  Dashboard do Node-RED com visualização do worldmap (posição do animal) </br>
+<img width="1911" height="916" alt="image" src="https://github.com/user-attachments/assets/5d1b892a-eb51-49bb-9c3b-9fcd0a7bee05" /> </br>
+Fonte: Autor
 </p>
-
-
-Já a figura seguinte mostra o painel de aceleração, que, embora esteja funcional em termos de design e lógica, ainda não recebe dados válidos por conta de problemas na decodificação ou parsing dos dados MQTT vindos do TTN:
-
 <p align="center"> 
-Figura 3: Dashboard do Node-RED para visualização de aceleração (dados não recebidos corretamente) </br> 
-<img width="1916" height="560" alt="image" src="https://github.com/user-attachments/assets/277af276-f9c8-46de-90ed-4c0431b46cad" />
+Figura 3: Página do Worldmap para visualização do rastreamento </br> 
+<img width="1916" height="560" alt="image" src="https://github.com/user-attachments/assets/277af276-f9c8-46de-90ed-4c0431b46cad" /> </br>
+Fonte: Autor
 </p> 
 
 Apesar dessas limitações, os testes confirmam que o sistema é capaz de identificar movimentos fora do padrão e associá-los a coordenadas geográficas, cumprindo seu objetivo principal. O uso de MQTT mostrou-se eficiente para transportar os dados entre o TTN e o Node-RED com baixa latência.
@@ -372,19 +374,31 @@ Os dados capturados pelos sensores foram processados e transmitidos para a rede 
 
 ### Dificuldades encontradas
 
-Compreensão da biblioteca lmic node. decodificar payloads recebidas no ttn envio de dados corretos do mpu para o node red
+Durante o desenvolvimento do projeto, foram encontradas diversas dificuldades técnicas, especialmente relacionadas à integração das diferentes camadas de hardware e software envolvidas. Uma das principais barreiras iniciais foi o entendimento da biblioteca LMIC-node, utilizada para a comunicação via protocolo LoRaWAN com a rede The Things Network (TTN). Apesar de ser uma biblioteca robusta e amplamente utilizada na comunidade, sua estrutura modular, os diversos arquivos de configuração e os pontos específicos onde o código do usuário deve ser inserido exigiram um esforço considerável de estudo e testes práticos para adaptação às necessidades do projeto.
+
+Outra dificuldade significativa foi o envio correto do payload. Embora os dados estivessem sendo lidos corretamente dos sensores (GPS e MPU6050), houve resistência no entendimento da maneira correta de compactar, codificar e transmitir essas informações via LoRa para que fossem interpretadas corretamente no TTN. Em vários testes iniciais, as coordenadas GPS apareciam decodificadas de forma incorreta no TTN Console, mesmo estando tecnicamente corretas no payload. Essa dificuldade foi agravada pela ausência de um decoder implementado diretamente no TTN, o que exigiu o tratamento dos dados no lado do cliente, via Node-RED.
+
+Além disso, o envio dos dados provenientes do acelerômetro MPU6050 enfrentou limitações. Embora fosse possível detectar movimentações e calcular a aceleração total no dispositivo, os dados não estavam sendo transmitidos corretamente ao TTN ou não estavam sendo refletidos como esperado no dashboard do Node-RED. Isso levantou a necessidade de revisar toda a lógica de detecção de movimento, a forma de compactação do payload e o correto agendamento dos uplinks dentro do fluxo da biblioteca LMIC.
+
+Por fim, um desafio recorrente foi a decodificação dos dados no TTN. Sem uma função de decoder ativa, os dados chegavam ao TTN como um array bruto de bytes (frm_payload), o que dificultava a validação visual dos valores de latitude, longitude e aceleração. Embora fosse possível decodificar esses dados diretamente no Node-RED, isso impôs uma etapa adicional de complexidade e aumentou o risco de erros durante os testes.
+
+Esses obstáculos, embora desafiadores, proporcionaram um aprendizado significativo em protocolos de comunicação sem fio, manipulação de dados binários e integração de sistemas IoT com plataformas na nuvem.
 
 ### Sugestões para trabalhos futuros
 
-Como trabalhos futuros, podem ser considerados a implementação de decodificadores diretos no TTN, a compactação mais eficiente dos dados enviados, e a integração com outros sensores (como de temperatura ou batimentos cardíacos) para ampliar o escopo de monitoramento da saúde animal.
+Apesar dos avanços obtidos neste projeto, ainda há diversas possibilidades de aprimoramento que podem ser exploradas em trabalhos futuros, tanto na parte de software quanto de hardware, com o objetivo de tornar o sistema mais robusto, preciso e funcional.
 
-Os próximos passos incluem:
+Uma das principais sugestões é a implementação de um decodificador personalizado diretamente no The Things Network (TTN). Atualmente, os dados são enviados em formato compacto (payload binário) e não são decodificados automaticamente no TTN, dificultando a leitura e análise direta dos valores recebidos. A criação de um script decoder em JavaScript dentro do próprio console TTN permitiria a transformação automática desses dados binários em objetos JSON com campos legíveis (latitude, longitude, aceleração, etc.), facilitando a depuração e a integração com plataformas externas como o Node-RED.
 
-* Implementar um decodificador no TTN para transformar os dados binários em JSON já na origem.
+Além disso, é recomendável otimizar o intervalo de envio dos dados. Atualmente, o sistema foi configurado para enviar pacotes a cada 30 segundos, mas observou-se que o TTN efetivamente os processa em intervalos maiores, frequentemente a cada 1 minuto. Isso pode ser reflexo das limitações de duty cycle impostas pelas normas de comunicação LoRaWAN (especialmente em regiões como AU915). Assim, trabalhar em estratégias de compactação mais eficientes e em um cronograma de transmissão adaptativo, por exemplo, transmitindo apenas quando há mudanças significativas nos dados, pode reduzir o tráfego desnecessário e respeitar os limites da rede.
 
-* Ajustar o fluxo do Node-RED para interpretar corretamente os dados do acelerômetro.
+Outra sugestão importante é a melhoria na lógica de interpretação dos dados do acelerômetro. Embora o sistema seja capaz de detectar movimentos anômalos, ainda há desafios na correta visualização dessas informações no dashboard do Node-RED. Refinar a forma como os dados são empacotados e interpretados permitirá melhor detecção de eventos e maior confiabilidade na identificação de comportamentos atípicos dos animais.
 
-* Testar com dispositivos múltiplos simultaneamente.
+Adicionalmente, o sistema pode ser expandido com novos sensores, como sensores de temperatura corporal, sensores de batimentos cardíacos ou sensores ambientais. A integração desses novos módulos permitirá um monitoramento mais completo do bem-estar animal, transformando o sistema em uma solução ainda mais abrangente para aplicações no agronegócio.
+
+Por fim, propõe-se também a realização de testes com múltiplos dispositivos em campo real, operando simultaneamente. Isso permitirá validar o comportamento do sistema em escala e analisar o desempenho da rede LoRaWAN em cenários mais complexos, com vários nós sensores enviando dados de forma assíncrona para um mesmo gateway.
+
+Essas melhorias futuras têm potencial para transformar a solução proposta em um sistema de monitoramento inteligente e escalável, aplicável a diferentes contextos rurais e adaptável a diversas necessidades do setor agropecuário.
 
 ## Referências
 
@@ -423,3 +437,4 @@ SCHULTHESS, et al. Estratégias de economia de energia e intervalos de envio em 
 THANGAVEL, et al. Comparative study between MQTT and HTTP protocols for IoT. Journal/Conference, 2018.
 
 Thangavel, D., Ma, X., Valera, A., Tan, H. X., & Tan, C. K. Y. (2018). Performance evaluation of MQTT and CoAP via a common middleware. IEEE Access, 6, 72338–72350. https://doi.org/10.1109/ACCESS.2018.2884903
+<img width="1910" height="847" alt="image" src="https://github.com/user-attachments/assets/2c5a2a53-e51f-424a-a16a-e513370f533c" />
