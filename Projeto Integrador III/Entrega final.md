@@ -16,9 +16,11 @@ Embora a adoção da IoT na pecuária brasileira ainda esteja em desenvolvimento
 
 O monitoramento dos movimentos e comportamentos dos animais fornece dados essenciais sobre saúde e bem-estar. Mudança nos padrões de atividade frequentemente sinalizam estresse, doenças ou lesões, possibilitando intervenções antecipadas (Atthari, 2017). Isso é especialmente relevante em regiões do interior do Brasil, onde os animais pastam livremente e estão mais suscetíveis a se perderem ou serem furtados. Soluções de rastreamento baseadas em IoT contribuem para reduzir esses riscos, aumentar a segurança no campo e reforçar a estabilidade econômica das comunidades agropecuárias. A imagem abaixo mostra uma visão geral de um sistema com vários rastreadores de gado conectados ao servidor back-end por meio de um gateway LoRaWAN.
 Os parâmetros de atividade coletados de cada dispositivo ativo são armazenados em um banco de dados SQL. Essa representação visual demonstra ideias futuras ao projeto atual.
-
-<img width="759" height="409" alt="image" src="https://github.com/user-attachments/assets/3767840f-8618-41e3-9857-0280808975ee" />
-
+<p align="center">
+Figura 1: Representação geral de um sistema com vários rastreadores de gado
+<img width="759" height="409" alt="image" src="https://github.com/user-attachments/assets/3767840f-8618-41e3-9857-0280808975ee" /> <br>
+Autor: Khadijah et al., 2019
+</p>
 
 Para uma implantação bem-sucedida dessas redes, ainda há desafios técnicos significativos a serem superados: condições ambientais adversas, alcance de comunicação, qualidade de serviço (QoS), custo de implementação e consumo energético (vida útil da bateria).
 
@@ -27,6 +29,19 @@ Nesse contexto, o protocolo LoRaWAN (Long Range Wide Area Network) tem se destac
 Além disso, o LoRa utiliza modulação CSS (chirp spread spectrum) e opera na faixa ISM sub-GHz, oferecendo boa penetração de sinal e resistência a interferências — características ideais para áreas com vegetação densa ou relevo acidentado, comuns no interior brasileiro.
 
 O principal dispositivo de monitoramento de gado utilizado nesta pesquisa foi o TTGO T-Beam, um microcontrolador que integra LoRa, GPS, Wi-Fi e o sensor MPU6050, tornando-o ideal para regiões remotas com conectividade limitada e desafios energéticos. O módulo GPS permite o rastreamento preciso da localização, essencial para a segurança dos animais e redução de riscos durante o pasto livre. O Wi-Fi possibilita o envio de dados para plataformas em nuvem, facilitando o acesso remoto às informações em tempo real. Já o sensor MPU6050, que mede aceleração e velocidade angular, fornece dados detalhados sobre movimentos e orientação dos animais, possibilitando a identificação de comportamentos anormais que possam indicar sofrimento, doenças ou lesões (Khadijah et et al., 2025).
+
+### Tabela 1 – Especificações técnicas do microcontrolador TTGO T-Beam v1.2 ESP32
+
+| **Modelo**                    | **TTGO T-Beam v1.1 ESP32**                                 |
+|------------------------------|-------------------------------------------------------------|
+| **Bandas ISM (MHz)**         | IN865–867                                                   |
+| **Semtech**                  | SX1276                                                      |
+| **Potência de transmissão**  | 20 dBM                                                      |
+| **Fator de espalhamento (SF)** | 7, 12                                                     |
+| **Largura de banda (kHz)**   | 125 kHz, 250 kHz                                            |
+| **Consumo de energia**       | **Modo ativo** (transmissão GPS & LoRa): 100–150 mA  <br> **Modo inativo**: 10–15 mA  <br> **Modo de sono profundo**: 1–2 mA |
+| **Peso**                     | 52 g                                                       |
+
 
 Com essa combinação de tecnologias, o Brasil pode contar com uma solução escalável, eficiente e de baixo custo para o gerenciamento pecuário. No cenário rural brasileiro, o LoRaWAN se destaca por sua capacidade de comunicação de longo alcance, baixo consumo de energia e uso de frequências não licenciadas, tornando-se ideal para aplicações como o rastreamento de gado em extensas regiões (Davcev et al., 2018).
 
@@ -119,11 +134,14 @@ Após os testes individuais com o módulo GPS embarcado na placa TTGO T-Beam, fo
 O MPU6050 foi o sensor escolhido para o presente trabalho. Trata-se de uma Unidade de Medida Inercial (IMU) que integra sensores de aceleração, nos eixos X, Y e Z, e de rotação angular (giroscópio) nos mesmos eixos. Além disso, possui uma interface de comunicação simples, utilizando o protocolo I2C, o que facilita sua integração com controladores, sendo utilizado neste caso o ESP32. A escolha desse sensor se deu por suas diversas vantagens, como o fato de ser compacto, oferecendo em um único chip a leitura de aceleração e rotação. Ele também apresenta alta precisão, o que o torna confiável para aplicações que exigem medições consistentes. Seu excelente custo-benefício o torna ideal para prototipagem, e seu baixo consumo de energia o torna adequado para sistemas embarcados e dispositivos móveis (Fedorov et al., 2015).
 
 A comunicação com o módulo GPS foi realizada via UART1, utilizando os pinos 34 (RX) e 12 (TX). Já o acelerômetro MPU6050 foi conectado ao barramento I2C padrão (pinos 21 - SDA e 22 - SCL). O código utilizado baseou-se novamente na bibliotecas TinyGPS++ com adição da MPU6050, que oferecem alto nível de abstração para facilitar a leitura de dados dos respectivos sensores. Além disso, ele foi estruturado para ler continuamente os dados do GPS, verificando a disponibilidade de novas leituras, obter os valores brutos de aceleração do MPU6050 e converter os valores brutos em g (gravidade). 
-
-<img width="696" height="552" alt="image" src="https://github.com/user-attachments/assets/4624dd4a-6baf-42da-a6d3-710d82916f03" />
-
+<p align="center">
 Figura 2: Protótipo do Hardware IoT.
-
+<img width="696" height="552" alt="image" src="https://github.com/user-attachments/assets/4624dd4a-6baf-42da-a6d3-710d82916f03" />  <br>
+Autor: Khadijah et al., 2019 <br>
+Figura 3: Foto ilustrativa de como será utilizado o colar no gado. 
+<img width="804" height="583" alt="image" src="https://github.com/user-attachments/assets/98c6baed-087b-46c2-9cc1-d22798e6153e" />  <br>
+Autor: Barker et al., 2018
+</p>
 
 Para a identificação de comportamentos anômalos em bovinos, é fundamental compreender os padrões normais de aceleração durante as atividades rotineiras dos animais. Estudos indicam que, durante a locomoção em piso rígido, como concreto, as pernas das vacas apresentam uma aceleração média na faixa de 1,62 a 1,72 g, enquanto em pisos mais macios, esse valor tende a ser levemente inferior. Essas faixas representam padrões típicos de caminhada e movimentação tranquila (Chapinal et al., 2011). O acelerômetros, nesse caso, pode ser utilizados para detectar desvios desses valores, que podem indicar comportamentos fora do normal, como mancar, agitação, brigas, fugas ou até mesmo tentativas de levantar-se de maneira brusca . 
 
@@ -250,10 +268,13 @@ Essa abordagem permite reduzir o número de transmissões, economizando energia 
 
 A escolha do protocolo de comunicação é um dos elementos críticos em projetos de Internet das Coisas (IoT), principalmente quando os dispositivos operam em redes com largura de banda limitada e exigências energéticas restritas, como em aplicações com LoRaWAN em ambientes rurais. Neste projeto, optou-se pela utilização do protocolo MQTT (Message Queuing Telemetry Transport) em detrimento do tradicional HTTP, visando garantir maior eficiência na comunicação entre os dispositivos e o backend de visualização de dados.
 
-Segundo estudo de Thangavel et al. (2018), o MQTT se destaca por utilizar um modelo de publicação e assinatura (publish/subscribe) baseado em conexões TCP persistentes, o que proporciona menor consumo de banda, baixa latência e eficiência energética significativamente superior ao modelo request/response do HTTP. O artigo também ressalta que o MQTT permite a configuração de níveis de Qualidade de Serviço (QoS), essenciais para garantir a entrega confiável das mensagens — um aspecto importante em aplicações que monitoram comportamentos críticos de animais.
+Segundo estudo de Thangavel et al. (2018), o MQTT se destaca por utilizar um modelo de publicação e assinatura (publish/subscribe) baseado em conexões TCP persistentes, o que proporciona menor consumo de banda, baixa latência e eficiência energética significativamente superior ao modelo request/response do HTTP. O artigo também ressalta que o MQTT permite a configuração de níveis de Qualidade de Serviço (QoS), essenciais para garantir a entrega confiável das mensagens, um aspecto importante em aplicações que monitoram comportamentos críticos de animais.
 
-Além disso, o cabeçalho compacto do MQTT e seu baixo overhead tornam o protocolo ideal para dispositivos com recursos limitados, como os empregados neste estudo, baseados no microcontrolador TTGO T-Beam com sensores embarcados. A integração com o The Things Network (TTN) foi realizada via TTN MQTT bridge, o que exigiu a geração de uma chave de autenticação (API Key) diretamente no console da plataforma e sua posterior configuração no fluxo de dados do Node-RED, ferramenta responsável pela visualização dos dados em tempo real em um dashboard interativo. Os dados recebidos pela TTN foram encaminhados utilizando as credenciais fornecidas pelo TTN MQTT Bridge conforme mostra a tabela abaixo: 
+Além disso, o cabeçalho compacto do MQTT e seu baixo overhead tornam o protocolo ideal para dispositivos com recursos limitados, como os empregados neste estudo, baseados no microcontrolador TTGO T-Beam com sensores embarcados. A integração com o The Things Network (TTN) foi realizada via TTN MQTT bridge, o que exigiu a geração de uma chave de autenticação (API Key) diretamente no console da plataforma e sua posterior configuração no fluxo de dados do Node-RED, ferramenta responsável pela visualização dos dados em tempo real em um dashboard interativo. A Tabela 3 mostra os parâmetros de configuração recebidos pela TTN, e que foram ecaminhados utilizando credenciais  fornecidas pelo TTN MQTT Bridge.
+ 
 
+### Tabela 3 – Especificações do TTGO T-Beam v1.1 ESP32 
+  
 | Parâmetro       | Valor                                                       |
 | --------------- | ----------------------------------------------------------- |
 | **MQTT Host**   | `nam1.cloud.thethings.network`                              |
@@ -262,34 +283,15 @@ Além disso, o cabeçalho compacto do MQTT e seu baixo overhead tornam o protoco
 | **Password**    | A **chave gerada** dessa API key                            |
 | **Tópico MQTT** | `v3/gps-agro@ttn/devices/+/up`                              |
 
+
 A adoção do MQTT, portanto, alinha-se às melhores práticas para comunicação em sistemas IoT distribuídos, conforme demonstrado pela literatura, assegurando um balanceamento adequado entre confiabilidade, leveza e escalabilidade da solução proposta.
 
 A arquitetura do backend foi composta por três elementos principais: Broker MQTT (TTN MQTT Bridge) responsável por receber os pacotes uplink transmitidos pela rede LoRaWAN e disponibilizá-los para assinantes MQTT; Node-RED, um ambiente de programação visual usado para processar os dados em tempo real, convertê-los para formatos legíveis e alimentar os dashboards interativos; Dashboard Web construída no próprio Node-RED, utilizando widgets de gráfico e mapa interativo (worldmap) para exibir a trajetória dos animais e os dados de aceleração.
 
 Essa abordagem permitiu uma visualização eficiente dos eventos capturados pelo dispositivo, como movimentos anômalos e localização GPS, com mínimo atraso, sem a necessidade de chamadas HTTP periódicas (polling), que aumentariam o tráfego de rede e o consumo de energia.
 
-### Tabela – Especificações do TTGO T-Beam v1.1 ESP32
-
-| **Modelo**                    | **TTGO T-Beam v1.1 ESP32**                                 |
-|------------------------------|-------------------------------------------------------------|
-| **Bandas ISM (MHz)**         | IN865–867                                                   |
-| **Semtech**                  | SX1276                                                      |
-| **Potência de transmissão**  | 20 dBM                                                      |
-| **Fator de espalhamento (SF)** | 7, 12                                                     |
-| **Largura de banda (kHz)**   | 125 kHz, 250 kHz                                            |
-| **Consumo de energia**       | **Modo ativo** (transmissão GPS & LoRa): 100–150 mA  <br> **Modo inativo**: 10–15 mA  <br> **Modo de sono profundo**: 1–2 mA |
-| **Peso**                     | 52 g                                                       |
 
 
-### Tabela – Especificações do *The Things Indoor Gateway*
-
-| **Modelo**                 | **The Things Indoor Gateway**     |
-|---------------------------|-----------------------------------|
-| **Frequência**            | AU915                             |
-| **Potência de transmissão (TX)** | 20 dBm                  |
-| **Chipset**               | SX1308                            |
-| **Dimensões**             | 90 × 80 × 40 mm                   |
-| **Versão da especificação LoRaWAN** | V.1.0.3              |
 
 ## Resultados
 
