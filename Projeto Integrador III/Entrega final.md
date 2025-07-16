@@ -35,7 +35,7 @@ Fonte: Khadijah et al., 2019
 
 Para uma implantação bem-sucedida dessas redes, ainda há desafios técnicos significativos a serem superados: condições ambientais adversas, alcance de comunicação, qualidade de serviço (QoS), custo de implementação e consumo energético (vida útil da bateria).
 
-Nesse contexto, o protocolo LoRaWAN (Long Range Wide Area Network) tem se destacado como uma solução viável para aplicações de IoT em áreas rurais e remotas, devido à sua grande cobertura, baixo consumo de energia e custo acessível. Estudos recentes monstraram a eficácia do LoRa em resolver problemas de conectividade em regiões com infraestrutura limitada. Joshitha et al. (2021) estudaram um sistema baseado em LoRa para transmissão de dados a longa distância, destacando sua capacidade de operar em locais sem acesso a redes de comunicação convensionais. O mesmo estudo introduziu um dispositivo de rastreamento de longo alcance utilizando LoRa, garantindo autonomia de redes de terceiros e redução de custos operacionais. Os resultados confirmam a adequação do LoRa para o rastreamento animal, com comunicação confiável mesmo em ambientes com poucos recursos.
+Nesse contexto, o protocolo LoRaWAN (Long Range Wide Area Network) tem se destacado como uma solução viável para aplicações de IoT em áreas rurais e remotas, devido à sua grande cobertura, baixo consumo de energia e custo acessível. Estudos recentes mostraram a eficácia do LoRa em resolver problemas de conectividade em regiões com infraestrutura limitada. Joshitha et al. (2021) estudaram um sistema baseado em LoRa para transmissão de dados a longa distância, destacando sua capacidade de operar em locais sem acesso a redes de comunicação convencionais. O mesmo estudo introduziu um dispositivo de rastreamento de longo alcance utilizando LoRa, garantindo autonomia de redes de terceiros e redução de custos operacionais. Os resultados confirmam a adequação do LoRa para o rastreamento animal, com comunicação confiável mesmo em ambientes com poucos recursos.
 
 Além disso, o LoRa utiliza modulação CSS (chirp spread spectrum) e opera na faixa ISM sub-GHz, oferecendo boa penetração de sinal e resistência a interferências — características ideais para áreas com vegetação densa ou relevo acidentado, comuns no interior brasileiro.
 
@@ -156,7 +156,7 @@ Esse teste isolado foi fundamental para assegurar que o módulo GPS estivesse op
 
 #### ** 2.1.3 Integração do Sensor MPU6050 via I²C**
 
-Após os testes individuais com o módulo GPS embarcado na placa TTGO T-Beam, foi realizado a integração do acelerômetro MPU6050 ao sistema. O objetivo deste teste foi verificar a leitura simultânea de dados de localização (GPS) e aceleração (MPU6050), assegurando que ambos os sensores operam corretamente em conjunto, utilizando as interfaces UART e I2C da placa TTGO.
+Após os testes individuais com o módulo GPS embarcado na placa TTGO T-Beam, foi realizada a integração do acelerômetro MPU6050 ao sistema. O objetivo deste teste foi verificar a leitura simultânea de dados de localização (GPS) e aceleração (MPU6050), assegurando que ambos os sensores operam corretamente em conjunto, utilizando as interfaces UART e I2C da placa TTGO.
 
 O MPU6050 foi o sensor escolhido para o presente trabalho. Trata-se de uma Unidade de Medida Inercial (IMU) que integra sensores de aceleração, nos eixos X, Y e Z, e de rotação angular (giroscópio) nos mesmos eixos. Além disso, possui uma interface de comunicação simples, utilizando o protocolo I2C, o que facilita sua integração com controladores, sendo utilizado neste caso o ESP32. A escolha desse sensor se deu por suas diversas vantagens, como o fato de ser compacto, oferecendo em um único chip a leitura de aceleração e rotação. Ele também apresenta alta precisão, o que o torna confiável para aplicações que exigem medições consistentes. Seu excelente custo-benefício o torna ideal para prototipagem, e seu baixo consumo de energia o torna adequado para sistemas embarcados e dispositivos móveis (Fedorov et al., 2015).
 
@@ -170,7 +170,7 @@ Figura 3: Foto ilustrativa de como será utilizado o colar no gado.
 Fonte: Barker et al., 2018
 </p>
 
-Para a identificação de comportamentos anômalos em bovinos, é fundamental compreender os padrões normais de aceleração durante as atividades rotineiras dos animais. Estudos indicam que, durante a locomoção em piso rígido, como concreto, as pernas das vacas apresentam uma aceleração média na faixa de 1,62 a 1,72 g, enquanto em pisos mais macios, esse valor tende a ser levemente inferior. Essas faixas representam padrões típicos de caminhada e movimentação tranquila (Chapinal et al., 2011). O acelerômetros, nesse caso, pode ser utilizados para detectar desvios desses valores, que podem indicar comportamentos fora do normal, como mancar, agitação, brigas, fugas ou até mesmo tentativas de levantar-se de maneira brusca . 
+Para a identificação de comportamentos anômalos em bovinos, é fundamental compreender os padrões normais de aceleração durante as atividades rotineiras dos animais. Estudos indicam que, durante a locomoção em piso rígido, como concreto, as pernas das vacas apresentam uma aceleração média na faixa de 1,62 a 1,72 g, enquanto em pisos mais macios, esse valor tende a ser levemente inferior. Essas faixas representam padrões típicos de caminhada e movimentação tranquila (Chapinal et al., 2011). O acelerômetro, nesse caso, pode ser utilizados para detectar desvios desses valores, que podem indicar comportamentos fora do normal, como mancar, agitação, brigas, fugas ou até mesmo tentativas de levantar-se de maneira brusca. 
 
 Em pesquisas voltadas à classificação automática de comportamento animal, valores médios de aceleração iguais ou superiores a 2,1 g têm sido usados como limiar para identificar atividades elevadas ou atípicas, especialmente quando persistem por janelas de tempo superiores a dois minutos. Assim, valores que se mantêm consistentemente acima desse patamar podem ser interpretados como indicadores de comportamento anômalo, principalmente quando analisados em conjunto com outros dados, como posicionamento ou observação visual (Barker, Z.E. et al., 2018). Esse conhecimento é fundamental para o desenvolvimento de sistemas de monitoramento automatizado no contexto da pecuária de precisão.
 
@@ -344,16 +344,16 @@ Figura 6: Fluxogramado Sistema no Node-RED </br>
 Os dados de localização GPS foram visualizados corretamente no mapa interativo (worldmap) e na dashboard, mais especificamente na aba "Mapa" mostrada na figura 7. Já os dados de aceleração (MPU6050), embora coletados e transmitidos, não estão sendo corretamente interpretados no TTN e, portanto, ainda não aparecem no dashboard como valores legíveis. As imagens a seguir apresentam o dashboard completo desenvolvido com Node-RED.
 
 <p align="center"> 
-Figura 6: Interface UI com Subpáginas de Aceleração e Localização </br>
+Figura 7: Interface UI com Subpáginas de Aceleração e Localização </br>
 <img width="258" height="380" alt="image" src="https://github.com/user-attachments/assets/d12d91f7-f566-4be0-8f66-7b4544dc00aa" /> </br>
 Fonte: Autor </br>
-Figura 7: Dashboard do Node-RED para visualização de aceleração (dados não recebidos corretamente) </br> 
+Figura 8: Dashboard do Node-RED para visualização de aceleração (dados não recebidos corretamente) </br> 
 <img width="1916" height="560" alt="image" src="https://github.com/user-attachments/assets/277af276-f9c8-46de-90ed-4c0431b46cad" /> </br>
 Fonte: Autor </br>
-Figura 8: Dashboard do Node-RED para visualização da posição do gado </br>
+Figura 9: Dashboard do Node-RED para visualização da posição do gado </br>
 <img width="1907" height="916" alt="image" src="https://github.com/user-attachments/assets/dfdfa7eb-1ea5-4367-95b5-e4436b60a470" /> </br>
 Fonte: Autor </br>
-Figura 4:  Página do Worldmap para visualização do rastreamento </br>
+Figura 10:  Página do Worldmap para visualização do rastreamento </br>
 <img width="1911" height="916" alt="image" src="https://github.com/user-attachments/assets/5d1b892a-eb51-49bb-9c3b-9fcd0a7bee05" /> </br>
 Fonte: Autor
 </p>
@@ -385,7 +385,7 @@ Apesar dos avanços obtidos neste projeto, ainda há diversas possibilidades de 
 
 Uma das principais sugestões é a implementação de um decodificador personalizado diretamente no The Things Network (TTN). Atualmente, os dados são enviados em formato compacto (payload binário) e não são decodificados automaticamente no TTN, dificultando a leitura e análise direta dos valores recebidos. A criação de um script decoder em JavaScript dentro do próprio console TTN permitiria a transformação automática desses dados binários em objetos JSON com campos legíveis (latitude, longitude, aceleração, etc.), facilitando a depuração e a integração com plataformas externas como o Node-RED.
 
-Além disso, é recomendável otimizar o intervalo de envio dos dados. Atualmente, o sistema foi configurado para enviar pacotes a cada 30 segundos, mas observou-se que o TTN efetivamente os processa em intervalos maiores, frequentemente a cada 1 minuto. Isso pode ser reflexo das limitações de duty cycle impostas pelas normas de comunicação LoRaWAN (especialmente em regiões como AU915). Assim, trabalhar em estratégias de compactação mais eficientes e em um cronograma de transmissão adaptativo, por exemplo, transmitindo apenas quando há mudanças significativas nos dados, pode reduzir o tráfego desnecessário e respeitar os limites da rede.
+Além disso, é recomendável otimizar o intervalo de envio dos dados. Atualmente, o sistema foi configurado para enviar pacotes a cada 30 segundos, mas observou-se que o TTN efetivamente os processa em intervalos maiores, frequentemente a cada 1 minuto. Isso pode ser reflexo das limitações de duty cycle (limite de tempo de transmissão permitido por norma regulatória em redes LoRaWAN) impostas pelas normas de comunicação LoRaWAN (especialmente em regiões como AU915). Assim, trabalhar em estratégias de compactação mais eficientes e em um cronograma de transmissão adaptativo, por exemplo, transmitindo apenas quando há mudanças significativas nos dados, pode reduzir o tráfego desnecessário e respeitar os limites da rede.
 
 Outra sugestão importante é a melhoria na lógica de interpretação dos dados do acelerômetro. Embora o sistema seja capaz de detectar movimentos anômalos, ainda há desafios na correta visualização dessas informações no dashboard do Node-RED. Refinar a forma como os dados são empacotados e interpretados permitirá melhor detecção de eventos e maior confiabilidade na identificação de comportamentos atípicos dos animais.
 
@@ -397,39 +397,34 @@ Essas melhorias futuras têm potencial para transformar a solução proposta em 
 
 ## Referências
 
-LU, et al. Internet das Coisas (IoT): Conceitos e evolução recente. Journal/Conference, 2024.
+LU, J. et al. Secure and real-time traceable data sharing in cloud-assisted IoT. IEEE Internet of Things Journal, v. 11, n. 4, p. 6521–6536, 2024.
 
-CHAMARA, et al. Aplicações da IoT na agricultura: Monitoramento ambiental e produtividade. Journal/Conference, 2022.
+CHAMARA, N. et al. Ag-IoT for crop and environment monitoring: past, present, and future. Agricultural Systems, v. 203, p. 103497, 2022.
 
-MCCLUNE, et al. Animal monitoring using IoT technology. Journal/Conference, 2014.
+McCLUNE, D. W. et al. Tri-axial accelerometers quantify behaviour in the Eurasian badger (Meles meles): towards an automated interpretation of field data. Animal Biotelemetry, v. 2, p. 1–6, 2014.
 
-LADHA, et al. Sensor technologies for livestock management. Journal/Conference, 2013.
+LADHA, C. et al. Dog’s life: wearable activity recognition for dogs. In: Proceedings of the 2013 ACM International Joint Conference on Pervasive and Ubiquitous Computing. p. 415–418, 2013.
 
-FAROOQ, et al. Behavioral monitoring systems in livestock using IoT. Journal/Conference, 2022.
+FAROOQ, M. S. et al. A survey on the role of IoT in agriculture for the implementation of smart livestock environment. IEEE Access, v. 10, p. 9483–9505, 2022.
 
-ATTHARI, A. Detection of animal behavior anomalies using sensors. Journal/Conference, 2017.
+ATTHARI, A. Sistem tracking position berdasarkan titik koordinat GPS menggunakan smartphone. Jurnal Infomedia: Teknik Informatika, Multimedia, dan Jaringan, v. 2, n. 1, p. 1–6, 2017.
 
-JOSHITHA, et al. LoRa-based animal tracking in rural areas. Journal/Conference, 2021.
+JOSHITHA, C. et al. LoRaWAN-based cattle monitoring smart system. In: International Conference on Energy, Environment and Sustainability (ICEES). p. 548–552, 2021.
 
-KHADIJAH, et al. Utilização do sensor MPU6050 na análise de comportamento animal. Journal/Conference, 2025.
+KHADIJAH, A. M. et al. Utilização do sensor MPU6050 na análise de comportamento animal. In: INTERNATIONAL CONFERENCE ON SMART CITIES AND GREEN ICT SYSTEMS (SMARTGREENS), 13., 2025, Angers, França. Anais... Angers: SCITEPRESS – Science and Technology Publications, 2025. DOI: 10.5220/0013296600003663.
 
-DAVCEV, et al. LoRaWAN for tracking and environmental monitoring. Journal/Conference, 2018.
+DAVCEV, D. et al. IoT agriculture system based on LoRaWAN. In: 14th IEEE International Workshop on Factory Communication Systems (WFCS). p. 1–4, 2018.
 
-ANGRIAWAN; ANUGRAHA. Uso do GPS integrado ao TTGO T-Beam. Journal/Conference, 2019.
+ANGRIAWAN, R.; ANUGRAHA, N. Sistem pelacak lokasi sapi com sistema de comunicação LoRa. Inspiration: Jurnal Teknologi Informasi dan Komunikasi, v. 9, n. 1, p. 33–39, 2019.
 
-MAHAPUTRA, et al. Low-cost embedded systems with sensor integration. Journal/Conference, 2019.
+MAHAPUTRA, I. et al. Rancang bangun sistem keamanan sepeda motor com GPS tracker berbasis mikrokontroler dan aplikasi Android. Majalah Ilmiah Teknologi Elektro, v. 18, n. 3, p. 361–368, 2019.
 
-PUTRA; ROMAHADI. Integração de múltiplas fontes de dados com TTGO. Journal/Conference, 2021.
+PUTRA, A.; ROMAHADI, D. Sistem keamanan sepeda motor berbasis Internet of Things (IoT) dengan smartphone menggunakan NodeMCU. Jurnal Teknologi Terpadu, v. 9, n. 1, p. 77–87, 2021.
 
-FEDOROV, et al. Applications of the MPU6050 in inertial sensors. Journal/Conference, 2015.
+FEDOROV, D. et al. Using of measuring system MPU6050 for the determination of the angular velocities and linear accelerations. Automatics & Software Enginery, v. 11, n. 1, p. 75–80, 2015.
 
-CHAPINAL, et al. Faixa de aceleração normal de vacas durante locomoção. Journal/Conference, 2011.
+SCHULTHESS, L.; LONGCHAMP, F.; VOGT, C.; MAGNO, M. A LoRa-based and maintenance-free cattle monitoring system for alpine pastures and remote locations. In: 11th International Workshop on Energy Harvesting & Energy‑Neutral Sensing Systems, 12, 2023, Istambul, Turquia. Proceedings… New York: ACM, 2023. p. 44–50. DOI: 10.1145/3628353.3628549
 
-BARKER, Z. E., et al. Acceleration thresholds for abnormal behavior detection in cattle. Journal/Conference, 2018.
+PORTO, S. M. C.; BONFANTI, M.; MANCUSO, D.; CASCONE, G. Assessing accelerometer thresholds for cow behaviour detection in free stall barns: a statistical analysis. Acta IMEKO, v. 13, n. 1, p. 1–4, mar. 2024. DOI: 10.21014/actaimeko.v13i1.1682.
 
-SCHULTHESS, et al. Estratégias de economia de energia e intervalos de envio em protótipos IoT. Journal/Conference, 2024.
-
-THANGAVEL, et al. Comparative study between MQTT and HTTP protocols for IoT. Journal/Conference, 2018.
-
-Thangavel, D., Ma, X., Valera, A., Tan, H. X., & Tan, C. K. Y. (2018). Performance evaluation of MQTT and CoAP via a common middleware. IEEE Access, 6, 72338–72350. https://doi.org/10.1109/ACCESS.2018.2884903
-<img width="1910" height="847" alt="image" src="https://github.com/user-attachments/assets/2c5a2a53-e51f-424a-a16a-e513370f533c" />
+THANGAVEL, D.; MA, X.; VALERA, A.; TAN, H. X.; TAN, C. K. Y. Performance evaluation of MQTT and CoAP via a common middleware. IEEE Access, v. 6, p. 72338–72350, 2018. DOI: https://doi.org/10.1109/ACCESS.2018.2884903.
