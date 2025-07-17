@@ -214,7 +214,7 @@ static const u1_t PROGMEM APPKEY[16] = { ... }; // Gerada pelo TTN
 Também foi atualizado o identificador do dispositivo para fins de organização no monitor serial e na interface do TTN:
 
 ```
-#define DEVICEID "meu_dispositivo"
+#define DEVICEID "gps1"
 ```
 No arquivo platformio.ini, foi selecionada a placa ttgo-lora32-v1, compatível com a TTGO T-Beam, além da região de frequência AU915 (utilizada no Brasil). A estrutura ficou semelhante a:
 
@@ -319,39 +319,71 @@ Essa abordagem permitiu uma visualização eficiente dos eventos capturados pelo
 
 Este trabalho utiliza dados temporais de um módulo GPS e do sensor MPU6050 para rastrear localização e movimento. Após a implementação completa do protótipo, foram realizados testes de envio e recepção de dados por meio da infraestrutura da The Things Network (TTN), utilizando comunicação LoRaWAN. O foco principal desta etapa foi verificar a integridade dos dados transmitidos, a resposta do sistema a eventos de movimento anômalo e a correta visualização no dashboard construído via Node-RED. 
 
-A imagem 4 mostra a interface do TTN onde são exibidos os dados recebidos em tempo real dos dispositivos conectados. Aqui é possível visualizar o payload (dados enviados pelo sensor), junto com os metadados da transmissão, como a intensidade do sinal (RSSI), relação sinal-ruído (SNR), frequência utilizada, e o timestamp da mensagem. Essa visão é útil para monitorar se os dispositivos estão enviando dados corretamente e para uma análise rápida dos valores recebidos. Já na imagem 5, são apresentados os detalhes específicos de um evento ocorrido na rede, como o recebimento de um pacote, o envio de uma mensagem para o dispositivo (downlink), ou mesmo erros de comunicação. A seção detalha informações técnicas importantes, que ajudam a diagnosticar o status da conexão, a qualidade da transmissão e identificar possíveis problemas com os dispositivos ou gateways.
+A imagem 4 mostra a interface do TTN onde são exibidos os dados recebidos em tempo real dos dispositivos conectados. Aqui é possível visualizar o payload (dados enviados pelo sensor), junto com os metadados da transmissão, como a intensidade do sinal (RSSI), relação sinal-ruído (SNR), frequência utilizada, e o timestamp da mensagem. Essa visão é útil para monitorar se os dispositivos estão enviando dados corretamente e para uma análise rápida dos valores recebidos.
 
 <p align="center"> 
 Figura 4: Registro dos dados recebidos em tempo real no Live Data do TTN (The Things Network) </br> 
-<img width="1910" height="719" alt="image" src="https://github.com/user-attachments/assets/014dec8f-0057-451e-ad29-7e074d87d3f1" /> </br> 
+<img width="1519" height="452" alt="image" src="https://github.com/user-attachments/assets/3bc6aaff-0857-42dc-8ad4-50741ec3b6bf" />  </br> 
 Fonte: Autor </br> 
-Figura 5: Informações específicas relacionadas ao funcionamento da rede </br> 
-<img width="738" height="713" alt="image" src="https://github.com/user-attachments/assets/d31812f4-202c-47a1-99aa-20f3096d5325" /> </br> 
-Fonte: Autor
 </p>
 
-Durante os testes, os pacotes uplink foram transmitidos para a TTN sempre que o acelerômetro detectava uma movimentação superior a 2.1 g e os dados do GPS estavam válidos. O payload enviado incluía latitude, longitude e aceleração total em um formato compacto de 9 bytes. No entanto, observou-se que, apesar da transmissão ser concluída, os dados não eram exibidos corretamente na aba Live Data do TTN Console. A decodificação automática dos pacotes ainda não foi implementada, o que resultou em informações de localização exibidas incorretamente na visualização direta do TTN.
+No contexto de comunicação LoRaWAN, os dados enviados pelo dispositivo são compactados em um payload binário (em bytes), que precisa ser interpretado corretamente no backend (no caso, o The Things Stack). O código a seguir foi desenvolvido para garantir a interpretação correta e segura (como mostrado na figura 4) dos 9 bytes recebidos em cada uplink, evitando erros comuns relacionados à conversão de inteiros com sinal e à estrutura dos dados.
 
-Apesar disso, ao inspecionar manualmente o conteúdo dos pacotes, na aba "Event Details", foi possível verificar que os valores brutos de latitude e longitude estavam presentes e coerentes, o que indicava que o envio de dados via LoRaWAN estava funcionando. Esses dados foram redirecionados com sucesso para o Node-RED via MQTT, onde foi possível decodificá-los corretamente. Com isso, foi possível construir um dashboard funcional, exibindo a localização dos animais no mapa (worldmap) e os eventos de movimentação com base nos dados do sensor MPU6050. A seguir, a figura 6 apresenta o ambiente de desenvolvimento e da interface gráfica desenvolvida no Node-RED, utilizadas no projeto de monitoramento de gado.
+A latitude e longitude são enviadas como inteiros de 32 bits com sinal (signed int32), ou seja, podem conter valores negativos. No entanto, o JavaScript possui limitações ao usar operadores bitwise (<<), principalmente quando o primeiro byte tem o bit mais significativo ativado, pois isso pode resultar em valores incorretos devido à forma como o JavaScript lida com bits de sinal. Para evitar isso, o código utiliza um ArrayBuffer e DataView, que são objetos nativos do JavaScript criados justamente para manipular dados binários de forma precisa e com controle explícito sobre o tipo (int32, uint8, etc.) e o endianness (ordem dos bytes).
+
+```
+function decodeUplink(input) {
+  if (input.bytes.length !== 9) {
+    return {
+      errors: ["Payload inválido, deve ter 9 bytes."]
+    };
+  }
+  const buffer = new ArrayBuffer(4);
+  const view = new DataView(buffer);
+
+  // Função segura para ler int32 de forma assinada
+  function readInt32(bytes, offset) {
+    const b = bytes.slice(offset, offset + 4);
+    for (let i = 0; i < 4; i++) view.setUint8(i, b[i]);
+    return view.getInt32(0); // padrão big-endian
+  }
+
+  const latRaw = readInt32(input.bytes, 0);
+  const lonRaw = readInt32(input.bytes, 4);
+  const accelRaw = input.bytes[8];
+
+  return {
+    data: {
+      latitude: latRaw / 1e6,
+      longitude: lonRaw / 1e6,
+      acceleration_g: accelRaw / 100.0
+    }
+  };
+}
+```
+
+Contanto, durante os testes, os pacotes uplink foram transmitidos para a TTN sempre que o acelerômetro detectava uma movimentação superior a 2.1 g e os dados do GPS estavam válidos. O payload enviado incluía latitude, longitude e aceleração total em um formato compacto de 9 bytes.
+
+Esses dados foram redirecionados para o Node-RED via MQTT, onde foi possível decodificá-los. Com isso, foi possível construir um dashboard funcional, exibindo a ideia de como ficará a visualização da localização dos animais no mapa (worldmap) e os eventos de movimentação com base nos dados do sensor MPU6050. A seguir, a figura 5 apresenta o ambiente de desenvolvimento e da interface gráfica desenvolvida no Node-RED, utilizadas no projeto de monitoramento de gado.
 
 <p align="center"> 
-Figura 6: Fluxogramado Sistema no Node-RED </br> 
+Figura 5: Fluxogramado Sistema no Node-RED </br> 
 <img width="1287" height="394" alt="image" src="https://github.com/user-attachments/assets/28ed163f-786d-477c-bb11-163778a30ea9" />
 </p> 
 
 Os dados de localização GPS foram visualizados corretamente no mapa interativo (worldmap) e na dashboard, mais especificamente na aba "Mapa" mostrada na figura 7. Já os dados de aceleração (MPU6050), embora coletados e transmitidos, não estão sendo corretamente interpretados no TTN e, portanto, ainda não aparecem no dashboard como valores legíveis. As imagens a seguir apresentam o dashboard completo desenvolvido com Node-RED.
 
 <p align="center"> 
-Figura 7: Interface UI com Subpáginas de Aceleração e Localização </br>
+Figura 6: Interface UI com Subpáginas de Aceleração e Localização </br>
 <img width="258" height="380" alt="image" src="https://github.com/user-attachments/assets/d12d91f7-f566-4be0-8f66-7b4544dc00aa" /> </br>
 Fonte: Autor </br>
-Figura 8: Dashboard do Node-RED para visualização de aceleração (dados não recebidos corretamente) </br> 
+Figura 7: Dashboard do Node-RED para visualização de aceleração (dados não recebidos corretamente) </br> 
 <img width="1916" height="560" alt="image" src="https://github.com/user-attachments/assets/277af276-f9c8-46de-90ed-4c0431b46cad" /> </br>
 Fonte: Autor </br>
-Figura 9: Dashboard do Node-RED para visualização da posição do gado </br>
+Figura 8: Dashboard do Node-RED para visualização da posição do gado </br>
 <img width="1907" height="916" alt="image" src="https://github.com/user-attachments/assets/dfdfa7eb-1ea5-4367-95b5-e4436b60a470" /> </br>
 Fonte: Autor </br>
-Figura 10:  Página do Worldmap para visualização do rastreamento </br>
+Figura 9:  Página do Worldmap para visualização do rastreamento </br>
 <img width="1911" height="916" alt="image" src="https://github.com/user-attachments/assets/5d1b892a-eb51-49bb-9c3b-9fcd0a7bee05" /> </br>
 Fonte: Autor
 </p>
@@ -363,17 +395,15 @@ Apesar dessas limitações, os testes confirmam que o sistema é capaz de identi
 
 Em suma, foi desenvolvido um sistema baseado em IoT utilizando a placa TTGO T-Beam com suporte a GPS, acelerômetro (MPU6050) e conectividade LoRaWAN, com o objetivo de monitorar em tempo real a movimentação e localização de animais em áreas rurais. Diferentemente de abordagens que priorizam a economia de energia com intervalos longos de envio de dados, este sistema priorizou a alta frequência de amostragem, enviando informações a cada 30 segundos ou imediatamente após detecção de movimentos anômalos.
 
-Os dados capturados pelos sensores foram processados e transmitidos para a rede The Things Network (TTN) via protocolo LoRaWAN utilizando o método OTAA. Embora os pacotes tenham sido transmitidos corretamente, a decodificação automática no console da TTN ainda não foi implementada, sendo necessária a interpretação manual dos payloads no Node-RED. Ainda assim, foi possível montar um dashboard funcional que exibe com precisão os dados de localização em um mapa e os eventos de movimentação com base no acelerômetro. O sistema mostrou-se eficaz na captação de dados relevantes para rastreamento de animais em tempo real, podendo contribuir para o controle de posicionamento e segurança do rebanho. 
+Os dados capturados pelos sensores foram processados e transmitidos para a rede The Things Network (TTN) via protocolo LoRaWAN utilizando o método OTAA. Com isso, foi possível visualizar com precisão os dados de localização no site (TTN) e os eventos de movimentação com base no acelerômetro. O sistema mostrou-se eficaz na captação de dados relevantes para rastreamento de animais em tempo real, podendo contribuir para o controle de posicionamento e segurança do rebanho. 
 
 ### Dificuldades encontradas
 
 Durante o desenvolvimento do projeto, foram encontradas diversas dificuldades técnicas, especialmente relacionadas à integração das diferentes camadas de hardware e software envolvidas. Uma das principais barreiras iniciais foi o entendimento da biblioteca LMIC-node, utilizada para a comunicação via protocolo LoRaWAN com a rede The Things Network (TTN). Apesar de ser uma biblioteca robusta e amplamente utilizada na comunidade, sua estrutura modular, os diversos arquivos de configuração e os pontos específicos onde o código do usuário deve ser inserido exigiram um esforço considerável de estudo e testes práticos para adaptação às necessidades do projeto.
 
-Outra dificuldade significativa foi o envio correto do payload. Embora os dados estivessem sendo lidos corretamente dos sensores (GPS e MPU6050), houve resistência no entendimento da maneira correta de compactar, codificar e transmitir essas informações via LoRa para que fossem interpretadas corretamente no TTN. Em vários testes iniciais, as coordenadas GPS apareciam decodificadas de forma incorreta no TTN Console, mesmo estando tecnicamente corretas no payload. Essa dificuldade foi agravada pela ausência de um decoder implementado diretamente no TTN, o que exigiu o tratamento dos dados no lado do cliente, via Node-RED.
+Outra dificuldade significativa foi o envio correto do payload. Embora os dados estivessem sendo lidos corretamente no sensor MPU6050, houve resistência no entendimento da maneira correta de compactar, codificar e transmitir essas informações via LoRa para que fossem interpretadas corretamente no TTN. Embora fosse possível detectar movimentações e calcular a aceleração total no dispositivo, os dados não estavam sendo transmitidos corretamente ao TTN ou não estavam sendo refletidos como esperado no dashboard do Node-RED. Isso levantou a necessidade de revisar toda a lógica de detecção de movimento, a forma de compactação do payload e o correto agendamento dos uplinks dentro do fluxo da biblioteca LMIC.
 
-Além disso, o envio dos dados provenientes do acelerômetro MPU6050 enfrentou limitações. Embora fosse possível detectar movimentações e calcular a aceleração total no dispositivo, os dados não estavam sendo transmitidos corretamente ao TTN ou não estavam sendo refletidos como esperado no dashboard do Node-RED. Isso levantou a necessidade de revisar toda a lógica de detecção de movimento, a forma de compactação do payload e o correto agendamento dos uplinks dentro do fluxo da biblioteca LMIC.
-
-Por fim, um desafio recorrente foi a decodificação dos dados no TTN. Sem uma função de decoder ativa, os dados chegavam ao TTN como um array bruto de bytes (frm_payload), o que dificultava a validação visual dos valores de latitude, longitude e aceleração. Embora fosse possível decodificar esses dados diretamente no Node-RED, isso impôs uma etapa adicional de complexidade e aumentou o risco de erros durante os testes.
+Por fim, um desafio recorrente foi a decodificação dos dados no TTN. Sem uma função de decoder ativa, os dados chegavam ao TTN como um array bruto de bytes (frm_payload), o que dificultava a validação visual dos valores de aceleração. Embora fosse possível decodificar esses dados diretamente no Node-RED, isso impôs uma etapa adicional de complexidade e aumentou o risco de erros durante os testes.
 
 Esses obstáculos, embora desafiadores, proporcionaram um aprendizado significativo em protocolos de comunicação sem fio, manipulação de dados binários e integração de sistemas IoT com plataformas na nuvem.
 
